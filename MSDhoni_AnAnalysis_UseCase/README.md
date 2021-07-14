@@ -90,7 +90,7 @@ MatchURL -> https://www.espncricinfo.com/ci/engine/match/455234.html
 
 ![455234](https://user-images.githubusercontent.com/72927429/125630798-601c6eea-0a1e-47cc-be51-5a812f3bf760.png)
 
-In this chase MS Dhoni didnt get much to do in final 10 overs, as he maintains a steady SR of 80 is dismissed at 43rd over without tearing into attack. The spike for the other batsman (Rohit sharma here) is shortlived as his quick innings gets cut short 42nd over, followed soon by Dhoni. Not much to write considering we are looking at performance at final 10 under immense chase pressure here. Thnakfully Harbhajan & Raina rounds off a thrilling finish in the end.
+In this chase MS Dhoni didnt get much to do in final 10 overs, as he maintains a steady SR of 80 is dismissed at 43rd over without tearing into attack. The spike for the other batsman (Rohit sharma here) is shortlived as his quick innings gets cut short 42nd over, followed soon by Dhoni. Not much to write considering we are looking at performance at final 10 under immense chase pressure here. Thankfully Harbhajan & Raina rounds off a thrilling finish in the end.
 
 ---
 
