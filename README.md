@@ -67,6 +67,7 @@ optional arguments:
 ![PlayerID](https://user-images.githubusercontent.com/72927429/125595555-8935c10e-828d-40ea-92d4-3c69c85f9110.png)
  
  To collect ODI career data for Greame Smith, below command needs to be executed:
+ 
  ```C:\Cricket>python PlayerScraper.py 47270```
  
  Sample output:
