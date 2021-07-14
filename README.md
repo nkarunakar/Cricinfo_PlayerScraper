@@ -74,26 +74,47 @@ optional arguments:
  A Sample csv file with headers & data captured for Greame Smith is shown below:
  
  Header details:
-	    ```SID = Series ID
+ 
+	```SID = Series ID
+	    
            MID = Match ID
+	   
            CHASE (1-> true, 0-> False)
+	   
            WON (1-> true, 0-> False)
+	   
            OVER = Over number
+	   
            TOTRUNS = Team Total runs at that over
+	   
            TOTWKTS = Team Total wickets at that over
+	   
            CSR = Current striker rate of player
+	   
            RUNS = Runs scored by player
+	   
            BALLS = Balls faced by player
+	   
            ORUNS = Other player runs (other player is batsman at other end)
+	   
            OBALLS = Balls faced by other player
+	   
            OBCSR = Other batsman current strike rate
+	   
            TGT = Target score, valid only if CHASE is true
+	   
            RRR = Required run rate, valid only if CHASE is true
+	   
            OUT (1 -> Player dismissed in game, 0 -> Player is not dismissed)
+	   
            DELTASR = Striker difference for Player between previous & current over
+	   
            CRR = Current run rate
+	   
            SERIES_NAME = Name of series
+	   
            FINISHED (1-> Final entry for match)
+	   
            START (1-> Innings started)```
 
 ![SampleSuccess](https://user-images.githubusercontent.com/72927429/125600108-bc672d72-f146-4ae4-a6f5-1209bae77a10.png)
