@@ -13,7 +13,7 @@ Python script to collect ball by ball data of a player's ODI career
  
  Python==3.8.5
  
- request==2.24.0
+ requests==2.24.0
  
  json==2.0.9
  
