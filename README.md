@@ -31,7 +31,7 @@ Python script to collect ball by ball data of a player's ODI career
  
  **Data is available for all the matches that player has played where in cricinfo commentary feature is available.**
  
- **This usually translaters to any ODI cricket game player during & after 1996 ODI Cricket world cup.**
+ **This usually translaters to any ODI cricket game player during & after 1999 ODI Cricket world cup.**
  
 
  
