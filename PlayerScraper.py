@@ -96,6 +96,7 @@ class cricketer:
         tgtscore="NA"
         reqrate="NA"
         plid=None
+        sname=""
         present=0
         overnum=0
         out=0
@@ -157,8 +158,11 @@ class cricketer:
                             sname=mjson["series"][i]["series_name"]
                             sid=mjson["series"][i]["object_id"]
                             break
-
-        print("Series name is %s" %sname)
+        if sname:
+            print("Series name is %s" %sname)
+        else:
+            sname="NOT AVAILABLE"
+            print("Series name is %s" %sname)
 
         if int(mjson["match"]["team1_id"])==self.__teamid:
             oppteam=mjson["match"]["team2_name"]
