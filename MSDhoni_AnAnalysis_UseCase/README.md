@@ -118,7 +118,7 @@ MatchID -> 518959
 
 MatchURL -> https://www.espncricinfo.com/ci/engine/match/518959.html
 
-![518959](https://user-images.githubusercontent.com/72927429/125631070-12765a24-b3d5-491d-a3f6-177875f0c901.png)
+![518959](https://user-images.githubusercontent.com/72927429/125720094-579f6525-463c-477e-abe1-67a98637dd4f.png)
 
 Another interesting chase with Dhoni again taking time & laying low despite a high RRR. However, Raina's powerful innings & Ravindra Jadeja's quick runs (both batsmen joined dhoni on other end) sees india home with MSD fireworks stealing show at 50th over. Uncharacteristically slow innings from MS Dhoni on final 10 sees chase go down the wire to 50th over. Again a weird little tactic from Dhoni taking it deep when it could have been avoided.
 
