@@ -3,6 +3,8 @@ Python script to collect ball by ball data of a player's ODI career
 
 # Python web scraping script to collect player ODI career data and analysis of the ODI career.
 
+# See sample use case for MS Dhoni for more details
+
  ##### PlayerScraper.py script connects to cricinfo website & collects specified player's ODI career data ball by ball on per over basis.
  ##### The python script needs input based on Player's ID assigned to player's profile on Cricinfo
  ##### This data is stored in a form of csv file with relevant headers which can be used with Python Pandas library to perform analysis
