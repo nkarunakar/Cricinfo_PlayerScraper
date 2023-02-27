@@ -9,7 +9,6 @@ class cricketer:
         self.__id=PlayerID
         self.__odiids=[]
         self.__URL=None
-        self.__teamref=None
         self.__teamid=None
         self.__pname=None
         self.__country=None
@@ -27,8 +26,8 @@ class cricketer:
         odiidsre=re.compile("/ci/engine/match/[0-9]+")
         URL="https://stats.espncricinfo.com/ci/engine/player/{}.html?class=2;template=results;type=batting;view=innings".format(self.__id)
         raw_form = requests.get(URL) 
-        contentsoup = BeautifulSoup(raw_form.content, 'html5lib')
-        mytable=contentsoup.find(text="Innings by innings list").find_parent("table")
+        contentsoup = BeautifulSoup(raw_form.content, 'html.parser')
+        mytable=contentsoup.find(string="Innings by innings list").find_parent("table")
         for row in mytable.find_all("tr")[1:]:
             tabledata=str(row.find_all("td"))
             if odiidsre.search(tabledata):
@@ -57,11 +56,22 @@ class cricketer:
             print("ERROR connecting to cricinfo website!!!\nPlease check internet connectivity or try again later")
             raise SystemExit
 
-        contentsoup = BeautifulSoup(raw_form.content, 'html5lib')
+        contentsoup = BeautifulSoup(raw_form.content, 'html.parser')
         #self.__pname=contentsoup.find("div",{"class":"ciPlayernametxt"}).find("h1").text.strip() - OLD CRICINFO PAGE
-        self.__pname=contentsoup.find("div",{"class":"player-card__details"}).find("h2").text.strip()
+        #self.__pname=contentsoup.find("div",{"class":"player-card__details"}).find("h2").text.strip()
+
+        #For latest changes in Cricinfo layout below code is added
+        #st=str(contentsoup.find("h1").parent())
+        st=str(contentsoup.find("h1").parent())
+        pattern1=r"([A-za-z ]+)$"
+        #self.__country=re.search(pattern1,st.split("</h1")[1].split(">")[0]).group(0)
+        self.__country=st.split("</span")[0].split(">")[-1]
+        #self.__pname=re.search(pattern1,st.split("</h2")[0].split("</span")[0]).group(0)
+        self.__pname=st.split("</h1")[0].split(">")[1]
+        # Code block ends for latest changes in cricinfo layaout as of Sept 1st 2022
+
         #self.__country=contentsoup.find("div",{"class":"ciPlayernametxt"}).find("h3").find("b").text.strip()  - OLD CRICINFO PAGE
-        self.__country=contentsoup.find("div",{"class":"player-info"},{"class":"player-card__country-name"}).text.split("|")[0]
+        #self.__country=contentsoup.find("div",{"class":"player-info"},{"class":"player-card__country-name"}).text.split("|")[0]
         self.__URL=r"https://www.espncricinfo.com/ci/content/player/{}.html".format(self.__id)
         print("Player's name -> %s\nPlayer's team -> %s" %(self.__pname,self.__country))
 
@@ -70,19 +80,29 @@ class cricketer:
         if self.returnStatus:
             print("No data available")
             return
-        hrefre=re.compile("href=\"(.+?)\"")
+        hrefrestring="\"/team/{}-([0-9])+\"".format(self.__country.lower().replace(" ","-"))
+        hrefre=re.compile(hrefrestring)
         URL=r"https://www.espncricinfo.com/team"
         raw_form = requests.get(URL) 
-        contentsoup = BeautifulSoup(raw_form.content, 'html5lib')
+        contentsoup = BeautifulSoup(raw_form.content, 'html.parser')
 
-        for row in contentsoup.find("div",{"class":"teams-section"}).find_all("a"):
-            c=row.find("h5").text
-            if c == self.__country:
-                self.__teamref=hrefre.search(str(row)).group().split("=")[1].replace("\"","")
-                break
-        print("Team reference is %s" %self.__teamref)
-        self.__teamid=int(self.__teamref[-1])
-        print("Team ID is %d" %self.__teamid)
+        # Below code block is commented as its no longer applicable for latest Cricinfo layout - Sept 1st 2022
+
+        #for row in contentsoup.find("div",{"class":"teams-section"}).find_all("a"):
+        #    c=row.find("h5").text
+        #    if c == self.__country:
+        #        self.__teamref=hrefre.search(str(row)).group().split("=")[1].replace("\"","")
+        #        break
+
+        # For cricinfo layout as of Sept 2022
+        for entry in contentsoup.find("div",{"class":"ds-grid"}).findAll("a"):
+            if entry.text.strip()==self.__country:
+                self.__teamid=int(hrefre.search(str(entry)).group(1))
+        if self.__teamid:
+            print("Team ID is %d" %self.__teamid)
+        else:
+            print("Team ID not found \n Exiting with error\n")
+            raise SystemExit
 
 
     def getMatchDetails(self,URL):
@@ -117,18 +137,24 @@ class cricketer:
         raw_form = requests.get(URL)
         mjson = json.loads(raw_form.content)
 
-        htmlurl=URL.replace(".json",".html")
+        htmlurl=URL.replace(".json",".html")   # Use pandas in future to read entire scorecard into a dataframe.
         raw_form = requests.get(htmlurl)
-        msoup = BeautifulSoup(raw_form.content, 'html5lib')
+        msoup = BeautifulSoup(raw_form.content, 'html.parser')
 
         print("For match: %r with MATCHID %r" %(URL,matchid))
         if not mjson["comms"]:
             return mlines
+
+        # For latest matches legacy_url is discontinued, so for such cases we rely in match_path for Series info
+        if mjson["match"]["legacy_url"]:
+            series_url=mjson["match"]["legacy_url"]
+        elif mjson["match"]["match_path"]:
+            series_url=mjson["match"]["match_path"]
         
-        if URLre.search(mjson["match"]["legacy_url"]):
-            leg_URL=URLre.search(mjson["match"]["legacy_url"]).group(1).split("/")[-1]
+        if URLre.search(series_url):
+            leg_URL=URLre.search(series_url).group(1).split("/")[-1]
         else:
-            leg_URL=mjson["match"]["legacy_url"].split("/")[4]
+            leg_URL=series_url.split("/")[4]
         leg_URL=re.sub("[0-9]","",leg_URL)   # Remove numerical data such as year details.
 
         sid=0
@@ -147,7 +173,7 @@ class cricketer:
                         break
         
         if sid==0:
-            for entry in mjson["match"]["legacy_url"].split("/"):
+            for entry in series_url.split("/"):
                 if not sid==0:
                     break
                 entry=re.sub("[0-9]","",entry)
@@ -173,7 +199,7 @@ class cricketer:
            innings=1
            print("Batting first")
         else:
-            innings=2
+            innings=3
             chase=1
             print("Batting second")
         if mjson["match"]["result_name"].find("result") >= 0:
@@ -186,8 +212,8 @@ class cricketer:
         else:
             print("%s LOST" %self.__country)
             WON=0
-
-        scorecard=msoup.find_all("table",{"class":"table batsman"})[innings-1]
+        print("%d" %innings)
+        scorecard=msoup.find_all("table")[innings-1]
 
         '''for row in scorecard.find_all("tr"):
             data=str(row.find_all("td")[0])
@@ -478,8 +504,8 @@ class cricketer:
         
         #Anything additional that needs to be added (for ex: Other player name, ground name, location...etc) needs to be addeded after DELTASR entry to 
         # avoid existing code from being affected, As we split based on index to calculate CRR, OBCSR, CSR etc for each row.
-        line="SID,MID,CHASE,WON,OVER,TOTRUNS,TOTWKTS,CSR,RUNS,BALLS,ORUNS,OBALLS,OBCSR,TGT,RRR,OUT,DELTASR,CRR,SERIES_NAME,OPPOSITION,FINISHED,START"
-        f.write(line+"\n")
+        hline="SID,MID,CHASE,WON,OVER,TOTRUNS,TOTWKTS,CSR,RUNS,BALLS,ORUNS,OBALLS,OBCSR,TGT,RRR,OUT,DELTASR,CRR,SERIES_NAME,OPPOSITION,FINISHED,START"
+        f.write(hline+"\n")
         for entry in self.__odiids: #['ci/engine/match/597929']: #self.__odiids:
             finalurl=rooturl+entry+".json"
             mylines=self.getMatchDetails(finalurl)
